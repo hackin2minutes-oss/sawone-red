@@ -31,14 +31,15 @@ jobs:
         with:
           sarif_file: sawone-red.sarif
 
-  # Shows findings in code scanning. continue-on-error keeps this job green so
-  # the demo stays readable; remove it to make the vulnerable mock gate CI.
+  # Shows findings in code scanning. The gate step is allowed to fail so the
+  # job stays green and the SARIF still uploads; remove continue-on-error to
+  # make the vulnerable mock gate CI.
   redteam-mock-vulnerable:
     runs-on: ubuntu-latest
-    continue-on-error: true
     steps:
       - uses: actions/checkout@v4
       - name: Run Sawone Red against the vulnerable mock (findings expected)
+        continue-on-error: true
         uses: ./
         with:
           config: examples/mock.yaml
