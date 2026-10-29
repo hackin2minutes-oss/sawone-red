@@ -120,11 +120,12 @@ def _summary(run: RunResult) -> str:
         if run.executed
         else "No probe reached the target."
     )
+    no_badges = '<span class="muted">No findings by severity.</span>'
     return (
         "<h2>Executive summary</h2>"
         f'<div class="cards">{card_html}</div>'
         f"<p>{escape(sentence)}</p>"
-        f"<p>{badges or '<span class=\"muted\">No findings by severity.</span>'}</p>"
+        f"<p>{badges or no_badges}</p>"
         '<p class="muted">Authorized testing only. This report records control failures. '
         "Probes plant benign markers and canary tokens, so it contains no harmful content by design.</p>"
     )
