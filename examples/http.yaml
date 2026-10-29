@@ -1,0 +1,24 @@
+# Copyright (c) 2026 Sawan Bhan. All rights reserved. Licensed under the MIT License.
+# Example: a generic chatbot or agent endpoint that you own or are authorized
+# to test. The canary must be planted in that endpoint's system prompt.
+name: Staging agent endpoint (generic HTTP)
+authorization:
+  authorized: true
+  owner: "Your name or team"
+  scope: "Staging agent endpoint at staging.example.com only"
+target:
+  type: http
+  url: "https://staging.example.com/api/chat"
+  method: POST
+  body:
+    message: "{{PROMPT}}"
+    session: "redteam"
+  response_path: "data.reply"
+  auth_env: "STAGING_API_KEY"
+  auth_header: "Authorization"
+  auth_prefix: "Bearer "
+canary: "SRCANARY-REPLACE-WITH-YOUR-OWN"
+fail_on: high
+output:
+  dir: sawone-red-reports/http
+  formats: [html, json, markdown, sarif]

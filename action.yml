@@ -1,0 +1,28 @@
+# Copyright (c) 2026 Sawan Bhan. All rights reserved. Licensed under the MIT License.
+name: Sawone Red
+description: AI red-teaming gate for LLM chatbots, AI agents and AI APIs. Fails CI on findings at or above a severity.
+author: Sawan Bhan
+branding:
+  icon: shield
+  color: red
+inputs:
+  config:
+    description: Path to the Sawone Red YAML config, relative to the repository root.
+    required: false
+    default: sawone-red.yaml
+  fail_on:
+    description: Fail the job on findings at or above this severity (info, low, medium, high, critical).
+    required: false
+    default: high
+  sarif_output:
+    description: Path where the SARIF 2.1.0 report is written, for upload to code scanning.
+    required: false
+    default: sawone-red.sarif
+  report_dir:
+    description: Directory for the HTML, JSON and Markdown reports.
+    required: false
+    default: sawone-red-reports
+runs:
+  using: docker
+  image: Dockerfile
+  entrypoint: /entrypoint.sh

@@ -1,0 +1,17 @@
+# Copyright (c) 2026 Sawan Bhan. All rights reserved. Licensed under the MIT License.
+# Vulnerable built-in mock chatbot. Runs offline with no API keys.
+# The mock is exempt from the authorization gate because it is self-contained.
+name: Sawone Red demo - vulnerable mock
+target:
+  type: mock
+  mode: vulnerable
+canary: "SRCANARY-7A3F9B21C0DE4E55"
+seed: "demo-2026"
+agent:
+  private_data: true
+  untrusted_input: true
+  outbound_channel: true
+fail_on: high
+output:
+  dir: sawone-red-reports/mock
+  formats: [html, json, markdown, sarif]

@@ -1,0 +1,36 @@
+# Copyright (c) 2026 Sawan Bhan. All rights reserved. Licensed under the MIT License.
+name: ci
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install Sawone Red with test extras
+        run: pip install -e ".[test]"
+      - name: Run test suite
+        run: pytest -q
+      - name: Validate probe library
+        run: sawone-red validate --config examples/mock.yaml
+      - name: Hardened mock must pass the gate
+        run: sawone-red run --config examples/mock-hardened.yaml --output-dir reports-hardened
+      - name: Vulnerable mock must fail the gate
+        run: |
+          set +e
+          sawone-red run --config examples/mock.yaml --output-dir reports-vulnerable
+          code=$?
+          set -e
+          test "$code" -eq 1

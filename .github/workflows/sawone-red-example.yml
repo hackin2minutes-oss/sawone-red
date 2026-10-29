@@ -1,0 +1,66 @@
+# Copyright (c) 2026 Sawan Bhan. All rights reserved. Licensed under the MIT License.
+# Example gate. The mock jobs need no secrets. The staging job is commented out
+# until you point it at an endpoint you own or are authorized to test.
+name: sawone-red-example
+
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  redteam-mock-hardened:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run Sawone Red against the hardened mock (gate passes)
+        uses: ./
+        with:
+          config: examples/mock-hardened.yaml
+          fail_on: high
+          sarif_output: sawone-red.sarif
+          report_dir: sawone-red-reports
+      - name: Upload SARIF to code scanning
+        if: always()
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: sawone-red.sarif
+
+  # Shows findings in code scanning. continue-on-error keeps this job green so
+  # the demo stays readable; remove it to make the vulnerable mock gate CI.
+  redteam-mock-vulnerable:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run Sawone Red against the vulnerable mock (findings expected)
+        uses: ./
+        with:
+          config: examples/mock.yaml
+          fail_on: high
+          sarif_output: sawone-red-vulnerable.sarif
+          report_dir: sawone-red-reports-vulnerable
+      - name: Upload SARIF to code scanning
+        if: always()
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: sawone-red-vulnerable.sarif
+
+  # Staging example. Create the secret STAGING_API_KEY in repository settings,
+  # then uncomment this job and point examples/http.yaml or examples/openai.yaml
+  # at your authorized staging endpoint.
+  # redteam-staging:
+  #   runs-on: ubuntu-latest
+  #   env:
+  #     STAGING_API_KEY: ${{ secrets.STAGING_API_KEY }}
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - uses: hackin2minutes-oss/sawone-red@v1
+  #       with:
+  #         config: examples/http.yaml
+  #         fail_on: high

@@ -1,0 +1,38 @@
+# Copyright (c) 2026 Sawan Bhan. All rights reserved. Licensed under the MIT License.
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sawone-red"
+version = "1.0.0"
+description = "Sawone Red: offensive security testing and CI gating for AI/ML systems."
+readme = "README.md"
+license = {text = "MIT"}
+authors = [{name = "Sawan Bhan"}]
+requires-python = ">=3.10"
+dependencies = ["PyYAML>=6.0"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Topic :: Security",
+]
+
+[project.optional-dependencies]
+test = ["pytest>=7.4"]
+
+[project.scripts]
+sawone-red = "sawone_red.cli:console"
+
+[project.urls]
+Homepage = "https://github.com/hackin2minutes-oss/sawone-red"
+Repository = "https://github.com/hackin2minutes-oss/sawone-red"
+
+[tool.setuptools.packages.find]
+include = ["sawone_red*"]
+
+[tool.setuptools.package-data]
+sawone_red = ["data/probes/*.yaml"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

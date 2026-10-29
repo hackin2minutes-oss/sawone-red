@@ -1,0 +1,17 @@
+# Copyright (c) 2026 Sawan Bhan. All rights reserved. Licensed under the MIT License.
+# Hardened built-in mock chatbot. Expected to pass the gate with zero findings.
+# The outbound channel is disabled, so the lethal-trifecta check passes too.
+name: Sawone Red demo - hardened mock
+target:
+  type: mock
+  mode: hardened
+canary: "SRCANARY-7A3F9B21C0DE4E55"
+seed: "demo-2026"
+agent:
+  private_data: true
+  untrusted_input: true
+  outbound_channel: false
+fail_on: high
+output:
+  dir: sawone-red-reports/mock-hardened
+  formats: [html, json, markdown, sarif]
