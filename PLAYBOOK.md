@@ -295,7 +295,7 @@ the Action works before you add a real target.
 | Unexpected passes on a real target | Check that the canary is planted. Check that the probe prompt reaches the model, for example through the `response_path`. |
 | Reports show `[REDACTED]` | Expected for `regex` detectors. The matched value is withheld by design. |
 
-## 12. Keeping the probe library current
+## 11. Keeping the probe library current
 
 The OWASP categories and examples that the probes follow change over time. The
 upstream sources are listed in `sources.yaml`:
@@ -329,7 +329,7 @@ a detector, a test and a human judgment about what the upstream text means. The
 upstream content is licensed by OWASP, so review it and cite it, but do not copy
 it into probe prompts.
 
-## 13. Development
+## 12. Development
 
 ```bash
 .venv/bin/pytest -q
