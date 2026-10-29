@@ -295,7 +295,41 @@ the Action works before you add a real target.
 | Unexpected passes on a real target | Check that the canary is planted. Check that the probe prompt reaches the model, for example through the `response_path`. |
 | Reports show `[REDACTED]` | Expected for `regex` detectors. The matched value is withheld by design. |
 
-## 11. Development
+## 12. Keeping the probe library current
+
+The OWASP categories and examples that the probes follow change over time. The
+upstream sources are listed in `sources.yaml`:
+
+- `owasp-llm-top10`: the LLM Top 10 project repository.
+- `owasp-llm-top10-educational-resources`: the project wiki's Educational Resources page.
+- `owasp-agentic-skills-top-10`: the agentic skills Top 10 repository.
+
+Each entry records `reviewed`, the commit a person last checked against the
+probe library. The `source-watch` workflow runs every Monday at 06:00 UTC. It
+compares each upstream head with its reviewed commit. When one differs, or has
+never been reviewed, it opens a single issue labeled `source-update` that lists
+the sources and links. While that issue stays open, no duplicate is created.
+
+To handle an update:
+
+1. Read the upstream changes at the links in the issue.
+2. Update or add probes under `sawone_red/data/probes/`, and the OWASP mapping if categories moved.
+3. Run `.venv/bin/pytest -q` and `.venv/bin/sawone-red validate --config examples/mock.yaml`.
+4. Set `reviewed` in `sources.yaml` to the upstream head shown in the issue.
+5. Open a pull request. Closing the issue after the merge stops the reminders.
+
+Run the check yourself at any time:
+
+```bash
+python3 scripts/check_sources.py --manifest sources.yaml
+```
+
+The watcher only reports changes. It never edits probes, because each probe needs
+a detector, a test and a human judgment about what the upstream text means. The
+upstream content is licensed by OWASP, so review it and cite it, but do not copy
+it into probe prompts.
+
+## 13. Development
 
 ```bash
 .venv/bin/pytest -q

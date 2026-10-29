@@ -1,0 +1,48 @@
+# Copyright (c) 2026 Sawan Bhan. All rights reserved. Licensed under the MIT License.
+# Weekly check of the upstream OWASP sources. Opens one issue when a source has
+# changed since its last review, and leaves it alone while that issue is open.
+name: source-watch
+
+on:
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install the manifest parser
+        run: pip install PyYAML
+      - name: Compare upstream heads with reviewed commits
+        id: check
+        run: |
+          set +e
+          python scripts/check_sources.py --manifest sources.yaml --report sources-report.md
+          code=$?
+          set -e
+          case "$code" in
+            0) echo "changed=false" >> "$GITHUB_OUTPUT" ;;
+            1) echo "changed=true" >> "$GITHUB_OUTPUT" ;;
+            *) exit "$code" ;;
+          esac
+      - name: Open a review issue if one is not already open
+        if: steps.check.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh label create source-update --force --color B60205 --description "Upstream OWASP source needs review"
+          open=$(gh issue list --label source-update --state open --json number -q '.[0].number')
+          if [ -z "$open" ]; then
+            gh issue create --title "Review upstream OWASP sources" --label source-update --body-file sources-report.md
+          else
+            echo "Issue #$open is already open; not creating a duplicate."
+          fi

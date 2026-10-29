@@ -1,0 +1,23 @@
+# Copyright (c) 2026 Sawan Bhan. All rights reserved. Licensed under the MIT License.
+# Upstream OWASP sources that the Sawone Red probe library tracks.
+#
+# reviewed: the full commit SHA a person last checked against the probe library.
+#   An empty value means the source has never been reviewed, so the watcher
+#   flags it. Update reviewed only after reading the upstream diff and changing
+#   any probes, packs or mappings that depend on it.
+sources:
+  - name: owasp-llm-top10
+    url: https://github.com/OWASP/www-project-top-10-for-large-language-model-applications.git
+    ref: refs/heads/main
+    link: https://github.com/OWASP/www-project-top-10-for-large-language-model-applications
+    reviewed: ""
+  - name: owasp-llm-top10-educational-resources
+    url: https://github.com/OWASP/www-project-top-10-for-large-language-model-applications.wiki.git
+    ref: refs/heads/master
+    link: https://github.com/OWASP/www-project-top-10-for-large-language-model-applications/wiki/Educational-Resources
+    reviewed: ""
+  - name: owasp-agentic-skills-top-10
+    url: https://github.com/OWASP/www-project-agentic-skills-top-10.git
+    ref: refs/heads/main
+    link: https://github.com/OWASP/www-project-agentic-skills-top-10
+    reviewed: ""
